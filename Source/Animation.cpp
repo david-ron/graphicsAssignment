@@ -120,7 +120,12 @@ void Animation::Draw()
     // Notes:
     // The shader is bound in World.cpp and the ViewProjection Matrix uniform is set there...
 	// The Model View Projection transforms are computed in the Vertex Shader
-
+    glBindVertexArray(mVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+    
+    GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
+    glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &mat4(1.0f)[0][0]);
+    glDrawArrays(GL_LINE_LOOP, 0, (int)mKey.size()); //
 
 }
 
@@ -201,6 +206,34 @@ glm::mat4 Animation::GetAnimationWorldMatrix() const
     
     mat4 worldMatrix(1.0f);
     
+    //int index = int(mCurrentTime) % mDuration);
+    //double dt =( mCurrentTime - mKeyTime[index])/(mKeyTime[index]-mKeyTime[++index]);
+    float intermediateTime = fmod(mCurrentTime, mDuration);
+    int indexes [2];
     
-    return worldMatrix;
+    
+    //
+    for (int i = 0; i < mKeyTime.size(); i++) {
+        
+        if (mKeyTime[i] < intermediateTime && mKeyTime[i + 1] > intermediateTime) {
+            indexes[0] = i;
+            indexes[1] = i + 1;
+        }
+        
+        /*Modulo the mKeyTime.size() and find points in between
+         */
+    }
+    float dt = (mCurrentTime - mKeyTime[indexes[0]]) / (mKeyTime[indexes[1]] - mKeyTime[indexes[0]]);
+    
+    vec3 intermediatePosition = glm::mix(mKey[indexes[0]].mPosition, mKey[indexes[1]].mPosition, dt);
+    vec3 intermediateRotationAxis = glm::mix(mKey[indexes[0]].mRotationAxis, mKey[indexes[1]].mRotationAxis, dt);
+    float intermediateRotationAngle = glm::mix(mKey[indexes[0]].mRotationAngleInDegrees, mKey[indexes[1]].mRotationAngleInDegrees, dt);
+    vec3 intermediateRotationScaling = glm::mix(mKey[indexes[0]].mScaling, mKey[indexes[1]].mScaling, dt);
+    
+    
+    mat4 translationMatrix = glm::translate(worldMatrix, intermediatePosition);
+    mat4 rotationMatrix = glm::rotate(translationMatrix, glm::radians(intermediateRotationAngle), intermediateRotationAxis);
+    mat4 transformationMatrix = glm::scale(rotationMatrix, intermediateRotationScaling);
+    
+    return transformationMatrix;
 }

@@ -12,6 +12,7 @@
 #include "ParticleEmitter.h"
 #include "EventManager.h"
 #include "World.h"
+#include <glm/gtx/rotate_vector.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/common.hpp>
@@ -90,7 +91,15 @@ void ParticleSystem::Update(float dt)
         //          mpDescriptor->velocityAngleRandomness.
         // Step 2 : You can rotate the result in step 1 by an random angle from 0 to
         //          360 degrees about the original velocity vector
-
+    
+        
+        
+        float randomValue = EventManager::GetRandomFloat(0.0f, mpDescriptor->velocityAngleRandomness);
+        vec3 axisToRotateOn = cross(mpDescriptor->velocity,vec3(0.5f,0.0f,0.5f));
+//        axisToRotateOn = vec3(1.0f,0.0f,0.0f);
+        vec3 randomAngleVelocity=glm::rotate(mpDescriptor->velocity, radians(randomValue), axisToRotateOn);
+        float randomValue2 = EventManager::GetRandomFloat(0.0f, 360.0f);
+        newParticle->velocity=glm::rotate(mpDescriptor->velocity, radians(randomValue2), axisToRotateOn);
         // ...
     }
     
@@ -100,7 +109,7 @@ void ParticleSystem::Update(float dt)
         Particle* p = *it;
 		p->currentTime += dt;
         p->billboard.position += p->velocity * dt;
-        
+        p->velocity += mpDescriptor->acceleration*dt;
         // @TODO 6 - Update each particle parameters
         //
         // Update the velocity of the particle from the acceleration in the descriptor
@@ -111,10 +120,29 @@ void ParticleSystem::Update(float dt)
         // Phase 1 - Initial: from t = [0, fadeInTime] - Linearly interpolate between initial color and mid color
         // Phase 2 - Mid:     from t = [fadeInTime, lifeTime - fadeOutTime] - color is mid color
         // Phase 3 - End:     from t = [lifeTime - fadeOutTime, lifeTime]
-                
-        
+        //float dt = (mCurrentTime - mKeyTime[indexes[0]]) / (mKeyTime[indexes[1]] - mKeyTime[indexes[0]]);
+
+        float fadeInTime = mpDescriptor->fadeInTime;
+        float fadeOutTime = mpDescriptor->fadeOutTime;
+        float currentTime = p->currentTime;
+        float lifeTime = mpDescriptor->totalLifetime ;
+        vec4 color;
+        if (currentTime>= 0 && currentTime<=fadeInTime){
+            vec4 initialColor = mpDescriptor->initialColor;
+            vec4 midColor = mpDescriptor->midColor;
+            
+            color = mix(initialColor,  midColor, (currentTime - 0) / (fadeInTime - 0));
+        }
+        if(currentTime>=fadeInTime && currentTime<=lifeTime-fadeOutTime){
+            color = mpDescriptor->midColor;
+        }
+        if(currentTime>=lifeTime-fadeOutTime&&currentTime<=lifeTime){
+            vec4 midColor = mpDescriptor->midColor;
+            vec4 endColor = mpDescriptor->endColor;
+            color = mix(midColor,  endColor, (currentTime - lifeTime) / (lifeTime-fadeOutTime - lifeTime));
+        }
         // ...
-        p->billboard.color = vec4(1.0f, 1.0f, 1.0f, 1.0f); // wrong... check required implementation above
+        p->billboard.color =color; // wrong... check required implementation above
         // ...
         
         // Do not touch code below...

@@ -28,9 +28,15 @@ glm::vec3 ParticleEmitter::GetPosition()
     //
     // Return the position where the particle is emitted.
     // If the emitter is parented, the position is relative to its parent
-
+   
     glm::vec3 position = mPosition;
-
+    if(mpParent){
+        mat4 worldMatrix = mpParent->GetWorldMatrix();
+//        mpParent->GetRotationAxis();
+//        mpParent->GetRotationAngle();
+        mpParent->GetPosition();
+        return mPosition+vec3({worldMatrix[0][3],worldMatrix[1][3],worldMatrix[2][3]});
+    }
     // ...
     
     return position;

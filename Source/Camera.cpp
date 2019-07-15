@@ -28,7 +28,7 @@ mat4 Camera::GetViewProjectionMatrix() const
 	
     mat4 viewProjection(1.0f);
     
-    return viewProjection;
+    return GetProjectionMatrix()*GetViewMatrix();
 }
 
 mat4 Camera::GetProjectionMatrix() const

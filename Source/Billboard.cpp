@@ -12,6 +12,7 @@
 #include "Camera.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 #include <glm/common.hpp>
 
 
@@ -149,7 +150,7 @@ void BillboardList::Update(float dt)
     for (list<Billboard*>::iterator it = mBillboardList.begin(); it != mBillboardList.end(); ++it)
     {
         const Billboard* b = *it;
-
+        
         // Colors
         mVertexBuffer[firstVertexIndex].color = mVertexBuffer[firstVertexIndex + 1].color = mVertexBuffer[firstVertexIndex +2].color = mVertexBuffer[firstVertexIndex + 3].color = mVertexBuffer[firstVertexIndex + 4].color = mVertexBuffer[firstVertexIndex + 5].color = b->color;
 
@@ -160,43 +161,68 @@ void BillboardList::Update(float dt)
         // Currently, positions are aligned with the X-Y plane, billboards must face the camera
         //
         // You must update the positions and normals for the 6 vertices below
+
+
+
+        // rotate (T angle, detail::tvec3< T > const &v)
+//        vec3 rotatedUp = glm::rotate(b->angle, vec3(),mLookAt);
+//        vec3 rotatedPosition = glm::rotate(b->angle, position,);
+
+        vec3 lookAtVector = {viewMatrix[0][2],viewMatrix[1][2],viewMatrix[2][2]};
+//        vec3 right = {viewMatrix[]}
+        mat4 viewRotatedMatrix = glm::rotate(viewMatrix, radians(b->angle), lookAtVector);
+//rotate (detail::tvec3< T > const &v, T const &angle, detail::tvec3< T > const &normal)
+        vec3 rightViewbefore = {viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]};
+        vec3 upViewbefore = {viewRotatedMatrix[0][1], viewRotatedMatrix[1][1], viewRotatedMatrix[2][1]};
+        vec3 rightView = glm::rotate(rightViewbefore,radians(b->angle),lookAtVector);
+        vec3 upView =  glm::rotate(upViewbefore,radians(b->angle),lookAtVector);
+//        vec3 CameraRight_worldspace = {viewRotatedMatrix[0][0], viewRotatedMatrix[1][0], viewRotatedMatrix[2][0]};
         
+//        vec3 rightView = {viewRotatedMatrix[0][0], viewRotatedMatrix[1][0], viewRotatedMatrix[2][0]};
         
+
+        
+        //        vec3 forward = viewMatrix[2];
         // Normals
-        mVertexBuffer[firstVertexIndex].normal = mVertexBuffer[firstVertexIndex + 1].normal = mVertexBuffer[firstVertexIndex +2].normal = mVertexBuffer[firstVertexIndex + 3].normal = mVertexBuffer[firstVertexIndex + 4].normal = mVertexBuffer[firstVertexIndex + 5].normal = vec3(0.0f, 0.0f, 1.0f); // wrong...
+        mVertexBuffer[firstVertexIndex].normal =
+        mVertexBuffer[firstVertexIndex + 1].normal =
+        mVertexBuffer[firstVertexIndex +2].normal =
+        mVertexBuffer[firstVertexIndex + 3].normal =
+        mVertexBuffer[firstVertexIndex + 4].normal =
+        mVertexBuffer[firstVertexIndex + 5].normal = cross(upView, rightView) ;// wrong...?
         
         // First triangle
         // Top left
-        mVertexBuffer[firstVertexIndex].position.x = b->position.x - 0.5f*b->size.x;
-        mVertexBuffer[firstVertexIndex].position.y = b->position.y + 0.5f*b->size.y;
-        mVertexBuffer[firstVertexIndex].position.z = b->position.z;
-        
+//        mVertexBuffer[firstVertexIndex].position.x = b->position.x + 0.5f*b->size.x*(upView.x - rightView.x);
+//        mVertexBuffer[firstVertexIndex].position.y = b->position.y + 0.5f*b->size.y*(upView.y - rightView.y);
+//        mVertexBuffer[firstVertexIndex].position.z = b->position.z ;
+        mVertexBuffer[firstVertexIndex].position = b->position + upView - rightView;
         // Bottom Left
-        mVertexBuffer[firstVertexIndex + 1].position.x = b->position.x - 0.5f*b->size.x;
-        mVertexBuffer[firstVertexIndex + 1].position.y = b->position.y - 0.5f*b->size.y;
-        mVertexBuffer[firstVertexIndex + 1].position.z = b->position.z;
-        
+//        mVertexBuffer[firstVertexIndex + 1].position.x = b->position.x + 0.5f*b->size.x*(-upView.x-rightView.x);
+//        mVertexBuffer[firstVertexIndex + 1].position.y = b->position.y + 0.5f*b->size.y*(-upView.y-rightView.y);
+//        mVertexBuffer[firstVertexIndex + 1].position.z = b->position.z ;
+        mVertexBuffer[firstVertexIndex + 1].position = b->position - upView - rightView;
         // Top Right
-        mVertexBuffer[firstVertexIndex + 2].position.x = b->position.x + 0.5f*b->size.x;
-        mVertexBuffer[firstVertexIndex + 2].position.y = b->position.y + 0.5f*b->size.y;
-        mVertexBuffer[firstVertexIndex + 2].position.z = b->position.z;
-        
+//        mVertexBuffer[firstVertexIndex + 2].position.x = b->position.x + 0.5f*b->size.x*(rightView.x+upView.x);
+//        mVertexBuffer[firstVertexIndex + 2].position.y = b->position.y + 0.5f*b->size.y*(rightView.y+upView.y);
+//        mVertexBuffer[firstVertexIndex + 2].position.z = b->position.z ;
+        mVertexBuffer[firstVertexIndex + 2].position = b->position + upView + rightView;
         // Second Triangle
         // Top Right
-        mVertexBuffer[firstVertexIndex + 3].position.x = b->position.x + 0.5f*b->size.x;
-        mVertexBuffer[firstVertexIndex + 3].position.y = b->position.y + 0.5f*b->size.y;
-        mVertexBuffer[firstVertexIndex + 3].position.z = b->position.z;
-        
+//        mVertexBuffer[firstVertexIndex + 3].position.x = b->position.x + 0.5f*b->size.x*(upView.x+rightView.x);
+//        mVertexBuffer[firstVertexIndex + 3].position.y = b->position.y + 0.5f*b->size.y*(upView.y+ rightView.y);
+//        mVertexBuffer[firstVertexIndex + 3].position.z = b->position.z;
+        mVertexBuffer[firstVertexIndex + 3].position = mVertexBuffer[firstVertexIndex + 2].position;
         // Bottom Left
-        mVertexBuffer[firstVertexIndex + 4].position.x = b->position.x - 0.5f*b->size.x;
-        mVertexBuffer[firstVertexIndex + 4].position.y = b->position.y - 0.5f*b->size.y;
-        mVertexBuffer[firstVertexIndex + 4].position.z = b->position.z;
-        
+//        mVertexBuffer[firstVertexIndex + 4].position.x = b->position.x + 0.5f*b->size.x*(-upView.x-rightView.x);;
+//        mVertexBuffer[firstVertexIndex + 4].position.y = b->position.y + 0.5f*b->size.y*(-upView.y-rightView.y);
+//        mVertexBuffer[firstVertexIndex + 4].position.z = b->position.z ;
+        mVertexBuffer[firstVertexIndex + 4].position = mVertexBuffer[firstVertexIndex + 1].position;
         // Bottom Right
-        mVertexBuffer[firstVertexIndex + 5].position.x = b->position.x + 0.5f*b->size.x;
-        mVertexBuffer[firstVertexIndex + 5].position.y = b->position.y - 0.5f*b->size.y;
-        mVertexBuffer[firstVertexIndex + 5].position.z = b->position.z;
-
+//        mVertexBuffer[firstVertexIndex + 5].position.x = b->position.x + 0.5f*b->size.x*(rightView.x -upView.x);
+//        mVertexBuffer[firstVertexIndex + 5].position.y = b->position.y + 0.5f*b->size.y*(rightView.y-upView.y);
+//        mVertexBuffer[firstVertexIndex + 5].position.z = b->position.z ;
+        mVertexBuffer[firstVertexIndex + 5].position = b->position - upView + rightView; ;
         
         // do not touch this...
         firstVertexIndex += 6;
