@@ -95,13 +95,10 @@ void ParticleSystem::Update(float dt)
         
         
         float randomValue = EventManager::GetRandomFloat(0.0f, mpDescriptor->velocityAngleRandomness);
-        vec3 axisToRotateOn = cross(mpDescriptor->velocity,vec3(1.0f,0.0f,0.0f));
-//        vec3 axisToRotateOn = vec3(0.0f,0.0f,1.0f);
-//        axisToRotateOn = vec3(1.0f,0.0f,0.0f);
-//        vec3 randomAngleVelocity=glm::rotate(mpDescriptor->velocity, radians(randomValue), axisToRotateOn);
-//        float randomValue2 = EventManager::GetRandomFloat(0.0f, 360.0f);
-//        vec3 axisToRotateOn2 = cross(mpDescriptor->velocity, randomAngleVelocity);
-        newParticle->velocity=glm::rotate(mpDescriptor->velocity, radians(randomValue), axisToRotateOn);
+        vec3 axisToRotateOn = cross(mpDescriptor->velocity,vec3(0.0f, 0.0f, 1.0f));
+        vec3 randomAngleVelocity=glm::rotate(mpDescriptor->velocity, radians(randomValue), axisToRotateOn);
+        float randomValue2 = EventManager::GetRandomFloat(0.0f, 360.0f);
+        newParticle->velocity=glm::rotate(mpDescriptor->velocity, radians(randomValue2), randomAngleVelocity);
         // ...
     }
     
@@ -111,7 +108,7 @@ void ParticleSystem::Update(float dt)
         Particle* p = *it;
 		p->currentTime += dt;
         p->billboard.position += p->velocity * dt;
-        p->velocity += mpDescriptor->acceleration*dt;
+        
         // @TODO 6 - Update each particle parameters
         //
         // Update the velocity of the particle from the acceleration in the descriptor
@@ -124,13 +121,12 @@ void ParticleSystem::Update(float dt)
         // Phase 3 - End:     from t = [lifeTime - fadeOutTime, lifeTime]
         //float dt = (mCurrentTime - mKeyTime[indexes[0]]) / (mKeyTime[indexes[1]] - mKeyTime[indexes[0]]);
         
-        // TODO UPDATE SIZE
         float fadeInTime = mpDescriptor->fadeInTime;
         float fadeOutTime = mpDescriptor->fadeOutTime;
         float currentTime = p->currentTime;
         float lifeTime = mpDescriptor->totalLifetime ;
         vec4 color;
-        
+        p->velocity += mpDescriptor->acceleration*dt;
         if (currentTime>= 0 && currentTime<=fadeInTime){
             vec4 initialColor = mpDescriptor->initialColor;
             vec4 midColor = mpDescriptor->midColor;
