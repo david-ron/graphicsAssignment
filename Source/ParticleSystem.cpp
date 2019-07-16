@@ -95,11 +95,13 @@ void ParticleSystem::Update(float dt)
         
         
         float randomValue = EventManager::GetRandomFloat(0.0f, mpDescriptor->velocityAngleRandomness);
-        vec3 axisToRotateOn = cross(mpDescriptor->velocity,vec3(0.5f,0.0f,0.5f));
+        vec3 axisToRotateOn = cross(mpDescriptor->velocity,vec3(1.0f,0.0f,0.0f));
+//        vec3 axisToRotateOn = vec3(0.0f,0.0f,1.0f);
 //        axisToRotateOn = vec3(1.0f,0.0f,0.0f);
-        vec3 randomAngleVelocity=glm::rotate(mpDescriptor->velocity, radians(randomValue), axisToRotateOn);
-        float randomValue2 = EventManager::GetRandomFloat(0.0f, 360.0f);
-        newParticle->velocity=glm::rotate(mpDescriptor->velocity, radians(randomValue2), axisToRotateOn);
+//        vec3 randomAngleVelocity=glm::rotate(mpDescriptor->velocity, radians(randomValue), axisToRotateOn);
+//        float randomValue2 = EventManager::GetRandomFloat(0.0f, 360.0f);
+//        vec3 axisToRotateOn2 = cross(mpDescriptor->velocity, randomAngleVelocity);
+        newParticle->velocity=glm::rotate(mpDescriptor->velocity, radians(randomValue), axisToRotateOn);
         // ...
     }
     
@@ -121,18 +123,20 @@ void ParticleSystem::Update(float dt)
         // Phase 2 - Mid:     from t = [fadeInTime, lifeTime - fadeOutTime] - color is mid color
         // Phase 3 - End:     from t = [lifeTime - fadeOutTime, lifeTime]
         //float dt = (mCurrentTime - mKeyTime[indexes[0]]) / (mKeyTime[indexes[1]] - mKeyTime[indexes[0]]);
-
+        
+        // TODO UPDATE SIZE
         float fadeInTime = mpDescriptor->fadeInTime;
         float fadeOutTime = mpDescriptor->fadeOutTime;
         float currentTime = p->currentTime;
         float lifeTime = mpDescriptor->totalLifetime ;
         vec4 color;
+        
         if (currentTime>= 0 && currentTime<=fadeInTime){
             vec4 initialColor = mpDescriptor->initialColor;
             vec4 midColor = mpDescriptor->midColor;
-            
             color = mix(initialColor,  midColor, (currentTime - 0) / (fadeInTime - 0));
         }
+        
         if(currentTime>=fadeInTime && currentTime<=lifeTime-fadeOutTime){
             color = mpDescriptor->midColor;
         }
@@ -141,8 +145,9 @@ void ParticleSystem::Update(float dt)
             vec4 endColor = mpDescriptor->endColor;
             color = mix(midColor,  endColor, (currentTime - lifeTime) / (lifeTime-fadeOutTime - lifeTime));
         }
+        p->billboard.size += dt * mpDescriptor->sizeGrowthVelocity;
         // ...
-        p->billboard.color =color; // wrong... check required implementation above
+        p->billboard.color = color; // wrong... check required implementation above
         // ...
         
         // Do not touch code below...

@@ -168,15 +168,20 @@ void BillboardList::Update(float dt)
 //        vec3 rotatedUp = glm::rotate(b->angle, vec3(),mLookAt);
 //        vec3 rotatedPosition = glm::rotate(b->angle, position,);
 
-        vec3 lookAtVector = {viewMatrix[0][2],viewMatrix[1][2],viewMatrix[2][2]};
+        
 //        vec3 right = {viewMatrix[]}
-        mat4 viewRotatedMatrix = glm::rotate(viewMatrix, radians(b->angle), lookAtVector);
+//        mat4 viewRotatedMatrix = glm::rotate(viewMatrix, radians(b->angle), lookAtVector);
 //rotate (detail::tvec3< T > const &v, T const &angle, detail::tvec3< T > const &normal)
+        vec3 lookAtVector = {viewMatrix[0][2],viewMatrix[1][2],viewMatrix[2][2]};
         vec3 rightViewbefore = {viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]};
-        vec3 upViewbefore = {viewRotatedMatrix[0][1], viewRotatedMatrix[1][1], viewRotatedMatrix[2][1]};
-        vec3 rightView = glm::rotate(rightViewbefore,radians(b->angle),lookAtVector);
-        vec3 upView =  glm::rotate(upViewbefore,radians(b->angle),lookAtVector);
-//        vec3 CameraRight_worldspace = {viewRotatedMatrix[0][0], viewRotatedMatrix[1][0], viewRotatedMatrix[2][0]};
+        vec3 upViewbefore = {viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1]};
+        
+        vec3 rightView = glm::rotate(rightViewbefore, radians(b->angle), lookAtVector);
+        vec3 rightViewNormalized = (0.5f* b->size.x *normalize(rightView));
+        vec3 upView =  glm::rotate(upViewbefore, radians(b->angle), lookAtVector) ;
+        vec3 upViewNormalized = normalize(upView) * 0.5f*b->size.y;
+        rightView = rightViewNormalized;
+        upView =upViewNormalized;
         
 //        vec3 rightView = {viewRotatedMatrix[0][0], viewRotatedMatrix[1][0], viewRotatedMatrix[2][0]};
         
@@ -189,23 +194,23 @@ void BillboardList::Update(float dt)
         mVertexBuffer[firstVertexIndex +2].normal =
         mVertexBuffer[firstVertexIndex + 3].normal =
         mVertexBuffer[firstVertexIndex + 4].normal =
-        mVertexBuffer[firstVertexIndex + 5].normal = cross(upView, rightView) ;// wrong...?
+        mVertexBuffer[firstVertexIndex + 5].normal = -lookAtVector ;// wrong...?
         
         // First triangle
         // Top left
-//        mVertexBuffer[firstVertexIndex].position.x = b->position.x + 0.5f*b->size.x*(upView.x - rightView.x);
-//        mVertexBuffer[firstVertexIndex].position.y = b->position.y + 0.5f*b->size.y*(upView.y - rightView.y);
-//        mVertexBuffer[firstVertexIndex].position.z = b->position.z ;
+//        mVertexBuffer[firstVertexIndex].position.x = b->position.x + upView.x - rightView.x;
+//        mVertexBuffer[firstVertexIndex].position.y = b->position.y + upView.y - rightView.y;
+//        mVertexBuffer[firstVertexIndex].position.z = b->position.z + upView.z - rightView.z;
         mVertexBuffer[firstVertexIndex].position = b->position + upView - rightView;
-        // Bottom Left
-//        mVertexBuffer[firstVertexIndex + 1].position.x = b->position.x + 0.5f*b->size.x*(-upView.x-rightView.x);
-//        mVertexBuffer[firstVertexIndex + 1].position.y = b->position.y + 0.5f*b->size.y*(-upView.y-rightView.y);
-//        mVertexBuffer[firstVertexIndex + 1].position.z = b->position.z ;
+//        // Bottom Left
+//        mVertexBuffer[firstVertexIndex + 1].position.x = b->position.x + -upView.x-rightView.x;
+//        mVertexBuffer[firstVertexIndex + 1].position.y = b->position.y + -upView.y-rightView.y;
+//        mVertexBuffer[firstVertexIndex + 1].position.z = b->position.z +  -upView.z-rightView.z;
         mVertexBuffer[firstVertexIndex + 1].position = b->position - upView - rightView;
         // Top Right
-//        mVertexBuffer[firstVertexIndex + 2].position.x = b->position.x + 0.5f*b->size.x*(rightView.x+upView.x);
-//        mVertexBuffer[firstVertexIndex + 2].position.y = b->position.y + 0.5f*b->size.y*(rightView.y+upView.y);
-//        mVertexBuffer[firstVertexIndex + 2].position.z = b->position.z ;
+//        mVertexBuffer[firstVertexIndex + 2].position.x = b->position.x + rightView.x+upView.x;
+//        mVertexBuffer[firstVertexIndex + 2].position.y = b->position.y + rightView.y+upView.y;
+//        mVertexBuffer[firstVertexIndex + 2].position.z = b->position.z + rightView.z+upView.z;
         mVertexBuffer[firstVertexIndex + 2].position = b->position + upView + rightView;
         // Second Triangle
         // Top Right
@@ -219,10 +224,10 @@ void BillboardList::Update(float dt)
 //        mVertexBuffer[firstVertexIndex + 4].position.z = b->position.z ;
         mVertexBuffer[firstVertexIndex + 4].position = mVertexBuffer[firstVertexIndex + 1].position;
         // Bottom Right
-//        mVertexBuffer[firstVertexIndex + 5].position.x = b->position.x + 0.5f*b->size.x*(rightView.x -upView.x);
-//        mVertexBuffer[firstVertexIndex + 5].position.y = b->position.y + 0.5f*b->size.y*(rightView.y-upView.y);
-//        mVertexBuffer[firstVertexIndex + 5].position.z = b->position.z ;
-        mVertexBuffer[firstVertexIndex + 5].position = b->position - upView + rightView; ;
+//        mVertexBuffer[firstVertexIndex + 5].position.x = b->position.x + rightView.x -upView.x;
+//        mVertexBuffer[firstVertexIndex + 5].position.y = b->position.y + rightView.y-upView.y;
+//        mVertexBuffer[firstVertexIndex + 5].position.z = b->position.z + rightView.z-upView.z ;
+        mVertexBuffer[firstVertexIndex + 5].position = b->position - upView + rightView;
         
         // do not touch this...
         firstVertexIndex += 6;
