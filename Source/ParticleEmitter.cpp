@@ -31,11 +31,13 @@ glm::vec3 ParticleEmitter::GetPosition()
    
     glm::vec3 position = mPosition;
     if(mpParent){
-        mat4 worldMatrix = mpParent->GetWorldMatrix();
-//        mpParent->GetRotationAxis();
-//        mpParent->GetRotationAngle();
         mpParent->GetPosition();
-        return mPosition+vec3({worldMatrix[0][3],worldMatrix[1][3],worldMatrix[2][3]});
+        mat4 worldMatrix = mpParent->GetWorldMatrix();
+        position = vec3({worldMatrix[0][3],worldMatrix[1][3],worldMatrix[2][3]});
+        position = mpParent->GetPosition();
+
+//        position = mpParent-> GetPosition();
+        return position;
     }
     // ...
     

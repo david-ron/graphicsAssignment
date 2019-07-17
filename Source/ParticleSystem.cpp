@@ -95,9 +95,10 @@ void ParticleSystem::Update(float dt)
         
         
         float randomValue = EventManager::GetRandomFloat(0.0f, mpDescriptor->velocityAngleRandomness);
-        vec3 axisToRotateOn = cross(mpDescriptor->velocity,vec3(0.0f, 0.0f, 1.0f));
+        vec3 axisToRotateOn = cross(mpDescriptor->velocity,vec3(1.0f, 0.0f, 0.0f));
         vec3 randomAngleVelocity=glm::rotate(mpDescriptor->velocity, radians(randomValue), axisToRotateOn);
         float randomValue2 = EventManager::GetRandomFloat(0.0f, 360.0f);
+//        vec3 axisToRotateOn2 = cross(mpDescriptor->velocity, randomAngleVelocity);
         newParticle->velocity=glm::rotate(mpDescriptor->velocity, radians(randomValue2), randomAngleVelocity);
         // ...
     }
@@ -132,11 +133,10 @@ void ParticleSystem::Update(float dt)
             vec4 midColor = mpDescriptor->midColor;
             color = mix(initialColor,  midColor, (currentTime - 0) / (fadeInTime - 0));
         }
-        
-        if(currentTime>=fadeInTime && currentTime<=lifeTime-fadeOutTime){
+        else if(currentTime>=fadeInTime && currentTime<=lifeTime-fadeOutTime){
             color = mpDescriptor->midColor;
         }
-        if(currentTime>=lifeTime-fadeOutTime&&currentTime<=lifeTime){
+        else if(currentTime>=lifeTime-fadeOutTime&&currentTime<=lifeTime){
             vec4 midColor = mpDescriptor->midColor;
             vec4 endColor = mpDescriptor->endColor;
             color = mix(midColor,  endColor, (currentTime - lifeTime) / (lifeTime-fadeOutTime - lifeTime));

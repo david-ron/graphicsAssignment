@@ -172,9 +172,9 @@ void BillboardList::Update(float dt)
 //        vec3 right = {viewMatrix[]}
 //        mat4 viewRotatedMatrix = glm::rotate(viewMatrix, radians(b->angle), lookAtVector);
 //rotate (detail::tvec3< T > const &v, T const &angle, detail::tvec3< T > const &normal)
-        vec3 lookAtVector = {viewMatrix[0][2],viewMatrix[1][2],viewMatrix[2][2]};
         vec3 rightViewbefore = {viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]};
         vec3 upViewbefore = {viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1]};
+        vec3 lookAtVector = {viewMatrix[0][2],viewMatrix[1][2],viewMatrix[2][2]};
         
         vec3 rightView = glm::rotate(rightViewbefore, radians(b->angle), lookAtVector);
         vec3 rightViewNormalized = (0.5f* b->size.x *normalize(rightView));

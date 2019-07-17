@@ -147,7 +147,7 @@ glm::mat4 Model::GetWorldMatrix() const
     if (mAnimation)
     {
         // Get world transform from animation key frames / current time
-        worldMatrix = mAnimation->GetAnimationWorldMatrix();
+        worldMatrix = mAnimation->GetAnimationWorldMatrix();        
     }
     else
     {
@@ -175,4 +175,9 @@ void Model::SetRotation(glm::vec3 axis, float angleDegrees)
 {
 	mRotationAxis = axis;
 	mRotationAngleInDegrees = angleDegrees;
+}
+vec3 Model::GetPosition() const {
+    mat4 mat= GetWorldMatrix();
+    vec3 position = {mat[3][0],mat[3][1],mat[3][2]};
+    return position;
 }
