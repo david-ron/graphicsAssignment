@@ -95,7 +95,7 @@ void ParticleSystem::Update(float dt)
         
         
         float randomValue = EventManager::GetRandomFloat(0.0f, mpDescriptor->velocityAngleRandomness);
-        vec3 axisToRotateOn = cross(mpDescriptor->velocity,vec3(1.0f, 0.0f, 0.0f));
+        vec3 axisToRotateOn = cross(mpDescriptor->velocity,vec3(0.0f, 0.0f, 1.0f));
         vec3 randomAngleVelocity=glm::rotate(mpDescriptor->velocity, radians(randomValue), axisToRotateOn);
         float randomValue2 = EventManager::GetRandomFloat(0.0f, 360.0f);
 //        vec3 axisToRotateOn2 = cross(mpDescriptor->velocity, randomAngleVelocity);
