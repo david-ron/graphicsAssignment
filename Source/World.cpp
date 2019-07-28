@@ -305,6 +305,10 @@ void World::LoadScene(const char * scene_path)
                 psd->Load(iss);
                 AddParticleDescriptor(psd);
             }
+            else if(result == "light"){
+                
+                continue;
+            }
 			else if ( result.empty() == false && result[0] == '#')
 			{
 				// this is a comment line
@@ -318,7 +322,6 @@ void World::LoadScene(const char * scene_path)
 	    }
 	}
 	input.close();
-
 	// Set Animation vertex buffers
 	for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
 	{

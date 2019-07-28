@@ -33,6 +33,7 @@
 		03DA72D222B02FC5009C7A21 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03DA72D122B02FC5009C7A21 /* libGLEW.a */; };
 		03FE4ED41B2FA1210020F06F /* Scenes in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03FE4ED21B2FA1010020F06F /* Scenes */; };
 		03FE4ED51B2FA1210020F06F /* Shaders in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03FE4ED31B2FA1010020F06F /* Shaders */; };
+		63FD9E6722EE4987006FAD6A /* Light.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63FD9E6522EE4987006FAD6A /* Light.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -95,6 +96,8 @@
 		03DA72D122B02FC5009C7A21 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = "../ThirdParty/glew-2.1.0/lib/osx/libGLEW.a"; sourceTree = "<group>"; };
 		03FE4ED21B2FA1010020F06F /* Scenes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Scenes; path = ../Assets/Scenes; sourceTree = "<group>"; };
 		03FE4ED31B2FA1010020F06F /* Shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Shaders; path = ../Assets/Shaders; sourceTree = "<group>"; };
+		63FD9E6522EE4987006FAD6A /* Light.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Light.cpp; sourceTree = "<group>"; };
+		63FD9E6622EE4987006FAD6A /* Light.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Light.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +196,8 @@
 				0321757A22D7005A00DF6CEA /* TextureLoader.h */,
 				0321757222D7005A00DF6CEA /* World.cpp */,
 				0321758D22D7005B00DF6CEA /* World.h */,
+				63FD9E6522EE4987006FAD6A /* Light.cpp */,
+				63FD9E6622EE4987006FAD6A /* Light.hpp */,
 			);
 			name = Source;
 			path = ../Source;
@@ -270,6 +275,7 @@
 				0321759D22D7005B00DF6CEA /* Model.cpp in Sources */,
 				0321759222D7005B00DF6CEA /* main.cpp in Sources */,
 				0321759F22D7005B00DF6CEA /* FirstPersonCamera.cpp in Sources */,
+				63FD9E6722EE4987006FAD6A /* Light.cpp in Sources */,
 				0321759622D7005B00DF6CEA /* EventManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

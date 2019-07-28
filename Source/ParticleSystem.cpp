@@ -139,7 +139,7 @@ void ParticleSystem::Update(float dt)
         else if(currentTime>=lifeTime-fadeOutTime&&currentTime<=lifeTime){
             vec4 midColor = mpDescriptor->midColor;
             vec4 endColor = mpDescriptor->endColor;
-            color = mix(midColor,  endColor, (currentTime - lifeTime) / (lifeTime-fadeOutTime - lifeTime));
+            color = mix(midColor,  endColor, (currentTime - (lifeTime-fadeOutTime)) / (fadeOutTime));
         }
         p->billboard.size += dt * mpDescriptor->sizeGrowthVelocity;
         // ...

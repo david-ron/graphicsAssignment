@@ -20,6 +20,7 @@ class Animation;
 class AnimationKey;
 class ParticleSystem;
 class ParticleDescriptor;
+class Light;
 
 class World
 {
