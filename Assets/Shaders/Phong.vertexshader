@@ -38,9 +38,19 @@ void main()
 
     vec3 vertexPosition_cameraspace = ( MV * vec4(vertexPosition_modelspace,1)).xyz;
     eyeVector = vec3(0,0,0) - vertexPosition_cameraspace;
-    vec3 LightPosition_cameraspace = ( ViewTransform * WorldLightPosition).xyz;
-    lightVector = vec4(LightPosition_cameraspace + eyeVector, dir);
-    normal = ( MV * vec4(vertexNormal_modelspace,0)).xyz;
+
+    if(WorldLightPosition.w == 1)
+    {
+    //vec3 LightPosition_cameraspace = ( ViewTransform * WorldLightPosition).xyz;
+    //lightVector = vec4(LightPosition_cameraspace - vertexPosition_modelspace, dir);
+    lightVector = ViewTransform * vec4(WorldLightPosition.xyz - vertexPosition_modelspace, dir);
+    }
+    else
+    {
+    lightVector = ViewTransform * WorldLightPosition;
+    }
+
+    //normal = ( MV * vec4(vertexNormal_modelspace,0)).xyz;
     mat4 Winvt = transpose(inverse(WorldTransform));
     
     normal = (ViewTransform * Winvt * vec4(vertexNormal_modelspace,0)).xyz;

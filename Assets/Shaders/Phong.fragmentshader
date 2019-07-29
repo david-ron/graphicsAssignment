@@ -32,7 +32,7 @@ void main()
     vec3 norm = normalize(normal);
     vec3 eye_vector = normalize(eyeVector);
     // maintain 4th element incase
-    vec4 light_vector = vec4(normalize(lightVector.xyz),lightVector.w);
+    vec4 light_vector = vec4(normalize(lightVector.xyz), lightVector.w);
     // distance
     float distance = length(light_vector.xyz);
     // Ambient
@@ -53,9 +53,10 @@ void main()
     vec3 specular = materialCoefficients.z * spec * lightColor;
 
     float attenuation = 1.0f / (lightAttenuation.x + lightAttenuation.y * distance + lightAttenuation.z * (distance * distance));
-   // ambient  *= attenuation;
+    if(lightVector.w > 0){
     diffuse  *= attenuation;
     specular *= attenuation;
+    }
     color = (ambient  + diffuse +specular ) * v_color;
 
 

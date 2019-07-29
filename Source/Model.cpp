@@ -127,6 +127,17 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
             ParticleSystem* ps = new ParticleSystem(emitter, desc);
             World::GetInstance()->AddParticleSystem(ps);
         }
+        else if (token[0] == "material")
+        {
+            assert(token.size() > 4);
+            assert(token[1] == "=");
+            
+            mMaterial.x = static_cast<float>(atof(token[2].c_str()));
+            mMaterial.y = static_cast<float>(atof(token[3].c_str()));
+            mMaterial.z = static_cast<float>(atof(token[4].c_str()));
+            mMaterial.w = static_cast<float>(atof(token[5].c_str()));
+            
+        }
 		else
 		{
 			return false;

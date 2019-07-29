@@ -199,18 +199,37 @@ void World::Draw()
 	glUseProgram(Renderer::GetShaderProgramID());
 
 	// This looks for the MVP Uniform variable in the Vertex Program
+    GLuint VMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewTransform");
+    GLuint PMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ProjectionTransform");
+    GLuint worldLightLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition");
+    // to phase out TODO
 	GLuint VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
+    // Send the view projection constants to the shader
+    mat4 VP = mCamera[mCurrentCamera]->GetViewProjectionMatrix();
 
-	// Send the view projection constants to the shader
-	mat4 VP = mCamera[mCurrentCamera]->GetViewProjectionMatrix();
+    mat4 V = mCamera[mCurrentCamera]->GetViewMatrix();
+    mat4 P = mCamera[mCurrentCamera]->GetProjectionMatrix();
+    Light* l = mLight[0];
+    
+    vec4 lightPosition = l->getPosition();
+    glUniform4f(worldLightLocation,lightPosition.x ,lightPosition.y, lightPosition.z, lightPosition.w);
+    glUniformMatrix4fv(VMatrixLocation, 1, GL_FALSE, &V[0][0]);
+    glUniformMatrix4fv(PMatrixLocation, 1, GL_FALSE, &P[0][0]);
 	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
+    
 
+// TODO for 8 lights...
+//    for (vector<Light*>::iterator it = mLight.begin(); it<mLight.end();++it)
+//    {
+//        (*it)->
+//    }
 	// Draw models
 	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
 	{
 		(*it)->Draw();
 	}
-
+    
+    
 	// Draw Path Lines
 	
 	// Set Shader for path lines
@@ -220,6 +239,8 @@ void World::Draw()
 
 	// Send the view projection constants to the shader
 	VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
+//    virtual glm::mat4 GetViewMatrix() const = 0;
+//    virtual glm::mat4 GetProjectionMatrix() const;
 	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
 
 	for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
