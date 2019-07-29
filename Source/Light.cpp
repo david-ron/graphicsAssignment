@@ -40,7 +40,7 @@ bool Light::ParseLine(std::vector<ci_string> token)
         lightPosition.z = static_cast<float>(atof(token[4].c_str()));
         lightPosition.w = static_cast<float>(atof(token[5].c_str()));
     }
-    else if (token[0] == "acceleration")
+    else if (token[0] == "lightattenuation")
     {
         assert(token.size() > 4);
         assert(token[1] == "=");
@@ -48,6 +48,15 @@ bool Light::ParseLine(std::vector<ci_string> token)
         lightAttenuation.x = static_cast<float>(atof(token[2].c_str()));
         lightAttenuation.y = static_cast<float>(atof(token[3].c_str()));
         lightAttenuation.z = static_cast<float>(atof(token[4].c_str()));
+    }
+    else if (token[0] == "color")
+    {
+        assert(token.size() > 4);
+        assert(token[1] == "=");
+        
+        lightColor.x = static_cast<float>(atof(token[2].c_str()));
+        lightColor.y = static_cast<float>(atof(token[3].c_str()));
+        lightColor.z = static_cast<float>(atof(token[4].c_str()));
     }
     else
     {
@@ -81,6 +90,19 @@ void Light::Load(ci_istringstream& iss)
     }
 }
 
+void Light::setPostion(glm::vec4 position)
+{
+    lightPosition = position;
+}
+void Light::setColor(glm::vec3 color)
+{
+    lightColor = color ;
+}
+void Light::setAttentuation(glm::vec3 attenuation)
+{
+    lightAttenuation = attenuation;
+    
+}
 Light::~Light()
 {
 }

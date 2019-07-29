@@ -21,6 +21,7 @@
 #include <GLFW/glfw3.h>
 #include "EventManager.h"
 #include "TextureLoader.h"
+#include "Light.hpp"
 
 #include "ParticleDescriptor.h"
 #include "ParticleEmitter.h"
@@ -306,8 +307,9 @@ void World::LoadScene(const char * scene_path)
                 AddParticleDescriptor(psd);
             }
             else if(result == "light"){
-                
-                continue;
+                Light* light = new Light();
+                light->Load(iss);
+                mLight.push_back(light);
             }
 			else if ( result.empty() == false && result[0] == '#')
 			{

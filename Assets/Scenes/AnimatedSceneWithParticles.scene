@@ -125,8 +125,10 @@ position = 10.0 2.0 0.0
 animation = "CycleAnim"
 particleEmitter = "Smoke"
 
+
 [Light]
-name        = "light1"
+name = "light1"
 position = 10.0 2.0 0.0
 color = 1.0 1.0 1.0
 lightAttenuation = 0.0 0.0 1.0
+

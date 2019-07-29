@@ -28,9 +28,9 @@ public:
     void Load(ci_istringstream& iss);
     bool ParseLine(std::vector<ci_string> token);
     
-    glm::vec4 setPostion();
-    glm::vec3 setColor();
-    glm::vec3 setAttentuation();
+    void setPostion(glm::vec4 position);
+    void setColor(glm::vec3 color);
+    void setAttentuation(glm::vec3 attenuation);
     ~Light();
     
 private:

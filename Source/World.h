@@ -55,6 +55,7 @@ private:
 	std::vector<Camera*> mCamera;
     std::vector<ParticleSystem*> mParticleSystemList;
     std::vector<ParticleDescriptor*> mParticleDescriptorList;
+    std::vector<Light*> mLight;
 	unsigned int mCurrentCamera;
 
     BillboardList* mpBillboardList;
