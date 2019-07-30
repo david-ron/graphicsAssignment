@@ -41,9 +41,9 @@ void main()
 
     if(WorldLightPosition.w == 1)
     {
-    //vec3 LightPosition_cameraspace = ( ViewTransform * WorldLightPosition).xyz;
-    //lightVector = vec4(LightPosition_cameraspace - vertexPosition_modelspace, dir);
-    lightVector = ViewTransform * vec4(WorldLightPosition.xyz - vertexPosition_modelspace, dir);
+    vec3 LightPosition_cameraspace = ( ViewTransform * WorldLightPosition).xyz;
+    lightVector = vec4(LightPosition_cameraspace - vertexPosition_modelspace, dir);
+    //lightVector = ViewTransform * vec4(WorldLightPosition.xyz - vertexPosition_modelspace, dir);
     }
     else
     {

@@ -27,26 +27,22 @@ void main()
 {
     mat4 MV = ViewTransform * WorldTransform;
     mat4 MVP = ProjectionTransform * MV;
-	// Output position of the vertex, in clip space : MVP * position
-	gl_Position =  ViewProjectionTransform * WorldTransform * vec4(vertexPosition_modelspace,1);
 
-	normal = vertexNormal_modelspace; // Does this need to be transformed when we pass it to the fragment shader?
-	v_color = vec4(vertexColor, 1.0f);
-
-
-
+    // Output position of the vertex, in clip space : MVP * position
+    gl_Position =  MVP * vec4(vertexPosition_modelspace,1);
+    v_color = vec4(vertexColor,1);
+    // Isolate for now
     float dir = WorldLightPosition.w;
     // Probably need this for the light?
     vec3 Position_worldspace = (WorldTransform * vec4(vertexPosition_modelspace, 1)).xyz;
 
     vec3 vertexPosition_cameraspace = ( MV * vec4(vertexPosition_modelspace,1)).xyz;
     eyeVector = vec3(0,0,0) - vertexPosition_cameraspace;
-
     if(WorldLightPosition.w == 1)
     {
     //vec3 LightPosition_cameraspace = ( ViewTransform * WorldLightPosition).xyz;
     //lightVector = vec4(LightPosition_cameraspace - vertexPosition_modelspace, dir);
-    lightVector = ViewTransform * vec4(WorldLightPosition.xyz - vertexPosition_modelspace, dir);
+    lightVector = vec4(WorldLightPosition.xyz - Position_worldspace, dir);
     }
     else
     {
@@ -54,12 +50,11 @@ void main()
     }
 
 
-    mat4 Winvt = transpose(inverse(WorldTransform));
-    v_color = vec4(vertexColor, 1.0f);
+    mat3 Winvt =mat3(transpose(inverse(WorldTransform)));
+
+    normal = ( Winvt * vertexNormal_modelspace);
 
 
-    //normal = (ViewTransform * Winvt * vec4(vertexNormal_modelspace,0)).xyz;
 
-    normal = ( MV * vec4(vertexNormal_modelspace,0)).xyz;
 }
 

@@ -33,7 +33,7 @@ public:
 	void SetPosition(glm::vec3 position);
 	void SetScaling(glm::vec3 scaling);
 	void SetRotation(glm::vec3 axis, float angleDegrees);
-    void setMaterial(glm::vec4 material);
+    void SetMaterial(glm::vec4 material);
     
 	glm::vec3 GetPosition() const		{ return mPosition; }
 	glm::vec3 GetScaling() const		{ return mScaling; }

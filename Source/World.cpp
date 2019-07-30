@@ -202,6 +202,9 @@ void World::Draw()
     GLuint VMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewTransform");
     GLuint PMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ProjectionTransform");
     GLuint worldLightLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition");
+    GLuint lightColorLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor");
+    GLuint lightAttenuationLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation");
+
     // to phase out TODO
 	GLuint VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
     // Send the view projection constants to the shader
@@ -212,6 +215,11 @@ void World::Draw()
     Light* l = mLight[0];
     
     vec4 lightPosition = l->getPosition();
+    vec3 lightColor = l->getColor();
+    vec3 lightAttenuation = l->getAttenuation();
+
+    glUniform3f(lightColorLocation,lightColor.x ,lightColor.y, lightColor.z);
+    glUniform3f(lightAttenuationLocation,lightAttenuation.x ,lightAttenuation.y, lightAttenuation.z);
     glUniform4f(worldLightLocation,lightPosition.x ,lightPosition.y, lightPosition.z, lightPosition.w);
     glUniformMatrix4fv(VMatrixLocation, 1, GL_FALSE, &V[0][0]);
     glUniformMatrix4fv(PMatrixLocation, 1, GL_FALSE, &P[0][0]);
@@ -239,8 +247,7 @@ void World::Draw()
 
 	// Send the view projection constants to the shader
 	VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
-//    virtual glm::mat4 GetViewMatrix() const = 0;
-//    virtual glm::mat4 GetProjectionMatrix() const;
+
 	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
 
 	for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)

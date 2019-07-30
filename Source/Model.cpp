@@ -187,3 +187,7 @@ void Model::SetRotation(glm::vec3 axis, float angleDegrees)
 	mRotationAxis = axis;
 	mRotationAngleInDegrees = angleDegrees;
 }
+void Model::SetMaterial(glm::vec4 materials)
+{
+    mMaterial = materials;
+}

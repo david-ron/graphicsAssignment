@@ -39,6 +39,7 @@ bool Light::ParseLine(std::vector<ci_string> token)
         lightPosition.y = static_cast<float>(atof(token[3].c_str()));
         lightPosition.z = static_cast<float>(atof(token[4].c_str()));
         lightPosition.w = static_cast<float>(atof(token[5].c_str()));
+    
     }
     else if (token[0] == "lightattenuation")
     {
