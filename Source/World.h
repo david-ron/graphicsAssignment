@@ -39,6 +39,7 @@ public:
     ParticleDescriptor* FindParticleDescriptor(ci_string name);
 
     const Camera* GetCurrentCamera() const;
+    const std::vector<Light*> GetCurrentLights() const {return mLight;}
     void AddBillboard(Billboard* b);
     void RemoveBillboard(Billboard* b);
     void AddParticleSystem(ParticleSystem* particleSystem);

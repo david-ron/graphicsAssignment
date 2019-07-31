@@ -7,22 +7,60 @@ layout(location = 2) in vec4 vertexColor;
 layout(location = 3) in vec2 vertexUV;
 
 
-// Uniform Inputs
+// Values for smoke
 uniform mat4 ViewProjectionTransform;
+uniform mat4 ProjectionTransform;
+uniform mat4 ViewTransform;
 uniform mat4 WorldTransform;
 
+uniform vec3 bananagirl;
 // Outputs to fragment shader
-out vec3 normal;  // You will need this when you do per-fragment lighting
+out vec3 normal;          // Transformed normal in View Space
+out vec3 eyeVector;       // Vector from the vertex to the Camera in View Space
+out vec4 lightVector;     // Vector from the vertex to the Light in View Space
+                          // Length of lightVector is the distance between light and vertex
 out vec4 v_color;
 out vec2 UV;
 
+// light position
+uniform vec4 WorldLightPosition; // if w = 1: Point light, if w = 0: directional light
+
 void main()
 {
+    mat4 MV = ViewTransform * WorldTransform;
+    //mat4 MVP = ProjectionTransform * MV;
 	// Output position of the vertex, in clip space : MVP * position
     gl_Position =  ViewProjectionTransform * WorldTransform * vec4(vertexPosition_modelspace, 1.0f);
 
     normal = vertexNormal_modelspace; // Does this need to be transformed when we pass it to the fragment shader?
 	v_color = vertexColor;
 	UV = vertexUV;
-}
 
+
+
+    v_color = vertexColor;
+
+
+    float dir = WorldLightPosition.w;
+
+
+
+
+    vec3 vertexPosition_cameraspace = ( MV * vec4(vertexPosition_modelspace,1)).xyz;
+
+    vec3 Position_worldspace = (WorldTransform * vec4(vertexPosition_modelspace, 1)).xyz;
+
+    eyeVector = -vertexPosition_cameraspace;
+
+    if(WorldLightPosition.w == 1)
+    {
+    vec4 lightView = ViewTransform*vec4(WorldLightPosition);
+    lightVector = vec4(lightView.xyz -vertexPosition_cameraspace,dir);
+    }
+    else
+    {
+    lightVector = ViewTransform * WorldLightPosition;
+    }
+
+
+}

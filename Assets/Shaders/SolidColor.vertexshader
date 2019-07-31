@@ -29,20 +29,29 @@ void main()
     mat4 MVP = ProjectionTransform * MV;
 
     // Output position of the vertex, in clip space : MVP * position
+
+
     gl_Position =  MVP * vec4(vertexPosition_modelspace,1);
+
+
     v_color = vec4(vertexColor,1);
-    // Isolate for now
+
+
     float dir = WorldLightPosition.w;
-    // Probably need this for the light?
-    vec3 Position_worldspace = (WorldTransform * vec4(vertexPosition_modelspace, 1)).xyz;
+
+
+
 
     vec3 vertexPosition_cameraspace = ( MV * vec4(vertexPosition_modelspace,1)).xyz;
-    eyeVector = vec3(0,0,0) - vertexPosition_cameraspace;
+
+    vec3 Position_worldspace = (WorldTransform * vec4(vertexPosition_modelspace, 1)).xyz;
+
+    eyeVector = -vertexPosition_cameraspace;
+
     if(WorldLightPosition.w == 1)
     {
-    //vec3 LightPosition_cameraspace = ( ViewTransform * WorldLightPosition).xyz;
-    //lightVector = vec4(LightPosition_cameraspace - vertexPosition_modelspace, dir);
-    lightVector = vec4(WorldLightPosition.xyz - Position_worldspace, dir);
+    vec4 lightView = ViewTransform*vec4(WorldLightPosition);
+    lightVector = vec4(lightView.xyz -vertexPosition_cameraspace,dir);
     }
     else
     {
@@ -50,9 +59,7 @@ void main()
     }
 
 
-    mat3 Winvt =mat3(transpose(inverse(WorldTransform)));
-
-    normal = ( Winvt * vertexNormal_modelspace);
+    normal = ( MV * vec4(vertexNormal_modelspace,0)).xyz;
 
 
 

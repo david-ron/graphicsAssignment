@@ -24,7 +24,7 @@ void main()
     // maintain 4th element incase
     vec4 light_vector = vec4(normalize(lightVector.xyz), lightVector.w);
     // distance
-    float distance = length(light_vector.xyz);
+    float distance = length(lightVector.xyz);
     // Ambient
     vec3 ambient = materialCoefficients.x * lightColor;
 

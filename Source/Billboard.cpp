@@ -10,6 +10,7 @@
 #include "Renderer.h"
 #include "World.h"
 #include "Camera.h"
+#include "Light.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
@@ -194,7 +195,7 @@ void BillboardList::Update(float dt)
         mVertexBuffer[firstVertexIndex +2].normal =
         mVertexBuffer[firstVertexIndex + 3].normal =
         mVertexBuffer[firstVertexIndex + 4].normal =
-        mVertexBuffer[firstVertexIndex + 5].normal = -lookAtVector ;// wrong...?
+        mVertexBuffer[firstVertexIndex + 5].normal = -normalize(lookAtVector) ;// wrong...?
         
         // First triangle
         // Top left
@@ -255,7 +256,7 @@ void BillboardList::Draw()
     
     GLuint textureLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "mySamplerTexture");
     glActiveTexture(GL_TEXTURE0);
-
+    
     Renderer::CheckForErrors();
 
     
@@ -267,12 +268,29 @@ void BillboardList::Draw()
 
     // This looks for the MVP Uniform variable in the Vertex Program
     GLuint VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
-    
+    GLuint VMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewTransform");
+    GLuint PMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ProjectionTransform");
+    GLuint worldLightLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition");
+    GLuint lightColorLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor");
+    GLuint lightAttenuationLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation");
     // Send the view projection constants to the shader
     const Camera* currentCamera = World::GetInstance()->GetCurrentCamera();
+    const vector<Light*> lights = World::GetInstance()->GetCurrentLights();
+    const Light* l = lights[0];
+    mat4 V = currentCamera->GetViewMatrix();
+    mat4 P = currentCamera->GetProjectionMatrix();
+//    const Light* l = currentLights[0];
+    
+    vec4 lightPosition = l->getPosition();
+    vec3 lightColor = l->getColor();
+    vec3 lightAttenuation = l->getAttenuation();
     mat4 VP = currentCamera->GetViewProjectionMatrix();
     glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
-
+    glUniform3f(lightColorLocation,lightColor.x ,lightColor.y, lightColor.z);
+    glUniform3f(lightAttenuationLocation,lightAttenuation.x ,lightAttenuation.y, lightAttenuation.z);
+    glUniform4f(worldLightLocation,lightPosition.x ,lightPosition.y, lightPosition.z, lightPosition.w);
+    glUniformMatrix4fv(VMatrixLocation, 1, GL_FALSE, &V[0][0]);
+    glUniformMatrix4fv(PMatrixLocation, 1, GL_FALSE, &P[0][0]);
     // Draw the Vertex Buffer
     // Note this draws a unit Cube
     // The Model View Projection transforms are computed in the Vertex Shader

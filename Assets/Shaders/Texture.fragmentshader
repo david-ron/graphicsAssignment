@@ -10,13 +10,42 @@ out vec4 color;
 // Values that stay constant for the whole mesh.
 uniform sampler2D myTextureSampler;
 
+
+in vec3 normal;          // Transformed normal in View Space
+in vec3 eyeVector;       // Vector from the vertex to the Camera in View Space
+in vec4 lightVector;     // Vector from the vertex to the Light in View Space
+
+uniform vec3 lightColor;
+uniform vec3 lightAttenuation; // x: kC  y: kL  z: kQ
+
 void main()
 {
 	vec4 textureColor = texture( myTextureSampler, UV );
-
     // modulate texture color with vertex color
     color = v_color * textureColor;
 
+    vec3 norm = normalize(normal);
+    vec3 eye_vector = normalize(eyeVector);
+    // maintain 4th element incase
+    vec4 light_vector = vec4(normalize(lightVector.xyz), lightVector.w);
+    // distance
+    float distance = length(vec3(light_vector));
+    // Ambient
+    vec3 ambient = lightColor;
+
+    float cosTheta = 1;
+    vec3 reflection = reflect(-light_vector.xyz, norm);
+
+    float cosPhi = clamp( dot( eye_vector, reflection ), 0,1 );
+
+    // Diffuse
+    vec3 diffuse =  cosTheta * lightColor;
+
+    float attenuation = 1.0f / (lightAttenuation.x + lightAttenuation.y * distance + lightAttenuation.z * (distance * distance));
+    if(lightVector.w > 0){
+    diffuse  *= attenuation;
+    }
+    color = vec4((ambient  + diffuse ),1.0) * color;
     // Alpha test - Discard Fragment below treshold
     if(color.a <= 0.02f)
         discard;

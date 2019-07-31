@@ -50,7 +50,7 @@ bool Light::ParseLine(std::vector<ci_string> token)
         lightAttenuation.y = static_cast<float>(atof(token[3].c_str()));
         lightAttenuation.z = static_cast<float>(atof(token[4].c_str()));
     }
-    else if (token[0] == "color")
+    else if (token[0] == "lightcolor")
     {
         assert(token.size() > 4);
         assert(token[1] == "=");
