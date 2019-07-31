@@ -24,6 +24,7 @@ void main()
     // modulate texture color with vertex color
     color = v_color * textureColor;
 
+
     vec3 norm = normalize(normal);
     vec3 eye_vector = normalize(eyeVector);
     // maintain 4th element incase
@@ -45,7 +46,7 @@ void main()
     if(lightVector.w > 0){
     diffuse  *= attenuation;
     }
-    color = vec4((ambient  + diffuse ),1.0) * color;
+    color = vec4(( diffuse ),1.0) * color;
     // Alpha test - Discard Fragment below treshold
     if(color.a <= 0.02f)
         discard;
