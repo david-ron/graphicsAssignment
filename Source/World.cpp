@@ -13,7 +13,7 @@
 
 #include "StaticCamera.h"
 #include "FirstPersonCamera.h"
-
+#include "Light.h"
 #include "CubeModel.h"
 #include "SphereModel.h"
 #include "Animation.h"
@@ -21,7 +21,6 @@
 #include <GLFW/glfw3.h>
 #include "EventManager.h"
 #include "TextureLoader.h"
-#include "Light.hpp"
 
 #include "ParticleDescriptor.h"
 #include "ParticleEmitter.h"
@@ -212,7 +211,8 @@ void World::Draw()
 
     mat4 V = mCamera[mCurrentCamera]->GetViewMatrix();
     mat4 P = mCamera[mCurrentCamera]->GetProjectionMatrix();
-    Light* l = mLight[0];
+    vector<Light*> lights = mLight;
+    Light* l = lights[0];
     
     vec4 lightPosition = l->getPosition();
     vec3 lightColor = l->getColor();
@@ -221,6 +221,86 @@ void World::Draw()
     glUniform3f(lightColorLocation,lightColor.x ,lightColor.y, lightColor.z);
     glUniform3f(lightAttenuationLocation,lightAttenuation.x ,lightAttenuation.y, lightAttenuation.z);
     glUniform4f(worldLightLocation,lightPosition.x ,lightPosition.y, lightPosition.z, lightPosition.w);
+    
+    
+    
+    l = lights[1];
+    vec4 lightPosition1 = l->getPosition();
+    vec3 lightColor1 = l->getColor();
+    vec3 lightAttenuation1 = l->getAttenuation();
+    GLuint worldLightLocation1 = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition1");
+    GLuint lightColorLocation1 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor1");
+    GLuint lightAttenuationLocation1 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation1");
+    glUniform3f(lightColorLocation1,lightColor1.x ,lightColor1.y, lightColor1.z);
+    glUniform3f(lightAttenuationLocation1,lightAttenuation1.x ,lightAttenuation1.y, lightAttenuation1.z);
+    glUniform4f(worldLightLocation1,lightPosition1.x ,lightPosition1.y, lightPosition1.z, lightPosition1.w);
+    
+    l = lights[2];
+    vec4 lightPosition2 = l->getPosition();
+    vec3 lightColor2 = l->getColor();
+    vec3 lightAttenuation2 = l->getAttenuation();
+    GLuint worldLightLocation2 = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition2");
+    GLuint lightColorLocation2 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor2");
+    GLuint lightAttenuationLocation2 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation2");
+    glUniform3f(lightColorLocation2,lightColor2.x ,lightColor2.y, lightColor2.z);
+    glUniform3f(lightAttenuationLocation2,lightAttenuation2.x ,lightAttenuation2.y, lightAttenuation2.z);
+    glUniform4f(worldLightLocation2,lightPosition2.x ,lightPosition2.y, lightPosition2.z, lightPosition2.w);
+    
+    l = lights[3];
+    vec4 lightPosition3 = l->getPosition();
+    vec3 lightColor3 = l->getColor();
+    vec3 lightAttenuation3 = l->getAttenuation();
+    GLuint worldLightLocation3 = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition3");
+    GLuint lightColorLocation3 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor3");
+    GLuint lightAttenuationLocation3 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation3");
+    glUniform3f(lightColorLocation3 ,lightColor3.x ,lightColor3.y, lightColor3.z);
+    glUniform3f(lightAttenuationLocation3, lightAttenuation3.x ,lightAttenuation3.y, lightAttenuation3.z);
+    glUniform4f(worldLightLocation3,lightPosition3.x ,lightPosition3.y, lightPosition3.z, lightPosition3.w);
+    
+    l = lights[4];
+    vec4 lightPosition4 = l->getPosition();
+    vec3 lightColor4 = l->getColor();
+    vec3 lightAttenuation4 = l->getAttenuation();
+    GLuint worldLightLocation4 = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition4");
+    GLuint lightColorLocation4 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor4");
+    GLuint lightAttenuationLocation4 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation4");
+    glUniform3f(lightColorLocation4 ,lightColor4.x ,lightColor4.y, lightColor4.z);
+    glUniform3f(lightAttenuationLocation4, lightAttenuation4.x ,lightAttenuation4.y, lightAttenuation4.z);
+    glUniform4f(worldLightLocation4,lightPosition4.x ,lightPosition4.y, lightPosition4.z, lightPosition4.w);
+    
+    
+    l = lights[5];
+    vec4 lightPosition5 = l->getPosition();
+    vec3 lightColor5 = l->getColor();
+    vec3 lightAttenuation5 = l->getAttenuation();
+    GLuint worldLightLocation5 = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition5");
+    GLuint lightColorLocation5 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor5");
+    GLuint lightAttenuationLocation5 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation5");
+    glUniform3f(lightColorLocation5 ,lightColor5.x ,lightColor5.y, lightColor5.z);
+    glUniform3f(lightAttenuationLocation5, lightAttenuation5.x ,lightAttenuation5.y, lightAttenuation5.z);
+    glUniform4f(worldLightLocation5,lightPosition5.x ,lightPosition5.y, lightPosition5.z, lightPosition5.w);
+    
+    l = lights[6];
+    vec4 lightPosition6 = l->getPosition();
+    vec3 lightColor6 = l->getColor();
+    vec3 lightAttenuation6 = l->getAttenuation();
+    GLuint worldLightLocation6 = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition6");
+    GLuint lightColorLocation6 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor6");
+    GLuint lightAttenuationLocation6 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation6");
+    glUniform3f(lightColorLocation6 ,lightColor6.x ,lightColor6.y, lightColor6.z);
+    glUniform3f(lightAttenuationLocation6, lightAttenuation6.x ,lightAttenuation6.y, lightAttenuation6.z);
+    glUniform4f(worldLightLocation6, lightPosition6.x ,lightPosition6.y, lightPosition6.z, lightPosition6.w);
+    
+    l = lights[7];
+    vec4 lightPosition7 = l->getPosition();
+    vec3 lightColor7 = l->getColor();
+    vec3 lightAttenuation7 = l->getAttenuation();
+    GLuint worldLightLocation7 = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition7");
+    GLuint lightColorLocation7 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor7");
+    GLuint lightAttenuationLocation7 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation7");
+    glUniform3f(lightColorLocation7 ,lightColor7.x ,lightColor7.y, lightColor7.z);
+    glUniform3f(lightAttenuationLocation7, lightAttenuation7.x ,lightAttenuation7.y, lightAttenuation7.z);
+    glUniform4f(worldLightLocation7, lightPosition7.x ,lightPosition7.y, lightPosition7.z, lightPosition7.w);
     glUniformMatrix4fv(VMatrixLocation, 1, GL_FALSE, &V[0][0]);
     glUniformMatrix4fv(PMatrixLocation, 1, GL_FALSE, &P[0][0]);
 	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
@@ -234,6 +314,7 @@ void World::Draw()
 	// Draw models
 	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
 	{
+        
 		(*it)->Draw();
 	}
     

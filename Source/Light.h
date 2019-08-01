@@ -21,25 +21,18 @@ class Light
 {
 public:
     Light();
-    glm::vec4 getPosition() const       { return lightPosition; }
-    glm::vec3 getColor() const          { return lightColor; }
-    glm::vec3 getAttenuation() const    { return lightAttenuation; }
+    glm::vec4 getPosition() const       { return lPosition;}
+    glm::vec3 getColor() const          { return lColor;}
+    glm::vec3 getAttenuation() const    { return lAttenuation;}
     
     void Load(ci_istringstream& iss);
     bool ParseLine(std::vector<ci_string> token);
-    
-    void setPostion(glm::vec4 position);
-    void setColor(glm::vec3 color);
-    void setAttentuation(glm::vec3 attenuation);
+
     ~Light();
     
 private:
-    
     ci_string name; // The light name is mainly for debugging
-    glm::vec4 lightPosition;
-    glm::vec3 lightColor;
-    glm::vec3 lightAttenuation;
-    
-
-
+    glm::vec4 lPosition;
+    glm::vec3 lColor;
+    glm::vec3 lAttenuation;
 };

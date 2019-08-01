@@ -5,13 +5,11 @@
 //
 // Copyright (c) 2014-2019 Concordia University. All rights reserved.
 //
-
+#include "Light.h"
 #include "Billboard.h"
 #include "Renderer.h"
 #include "World.h"
 #include "Camera.h"
-#include "Light.hpp"
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/common.hpp>
@@ -163,32 +161,13 @@ void BillboardList::Update(float dt)
         //
         // You must update the positions and normals for the 6 vertices below
 
-
-
-        // rotate (T angle, detail::tvec3< T > const &v)
-//        vec3 rotatedUp = glm::rotate(b->angle, vec3(),mLookAt);
-//        vec3 rotatedPosition = glm::rotate(b->angle, position,);
-
-        
-//        vec3 right = {viewMatrix[]}
-//        mat4 viewRotatedMatrix = glm::rotate(viewMatrix, radians(b->angle), lookAtVector);
-//rotate (detail::tvec3< T > const &v, T const &angle, detail::tvec3< T > const &normal)
-        vec3 rightViewbefore = {viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]};
-        vec3 upViewbefore = {viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1]};
+        vec3 rightVector = {viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]};
+        vec3 upViewVector = {viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1]};
         vec3 lookAtVector = {viewMatrix[0][2],viewMatrix[1][2],viewMatrix[2][2]};
-        
-        vec3 rightView = glm::rotate(rightViewbefore, radians(b->angle), lookAtVector);
-        vec3 rightViewNormalized = (0.5f* b->size.x *normalize(rightView));
-        vec3 upView =  glm::rotate(upViewbefore, radians(b->angle), lookAtVector) ;
-        vec3 upViewNormalized = normalize(upView) * 0.5f*b->size.y;
-        rightView = rightViewNormalized;
-        upView =upViewNormalized;
-        
-//        vec3 rightView = {viewRotatedMatrix[0][0], viewRotatedMatrix[1][0], viewRotatedMatrix[2][0]};
-        
+        vec3 rightRotatedNorm = 0.5f* b->size.x *normalize(glm::rotate(rightVector, radians(b->angle), lookAtVector));
+        vec3 upRotatedNorm =  normalize(glm::rotate(upViewVector, radians(b->angle), lookAtVector)) * 0.5f*b->size.y;
 
         
-        //        vec3 forward = viewMatrix[2];
         // Normals
         mVertexBuffer[firstVertexIndex].normal =
         mVertexBuffer[firstVertexIndex + 1].normal =
@@ -199,37 +178,19 @@ void BillboardList::Update(float dt)
         
         // First triangle
         // Top left
-//        mVertexBuffer[firstVertexIndex].position.x = b->position.x + upView.x - rightView.x;
-//        mVertexBuffer[firstVertexIndex].position.y = b->position.y + upView.y - rightView.y;
-//        mVertexBuffer[firstVertexIndex].position.z = b->position.z + upView.z - rightView.z;
-        mVertexBuffer[firstVertexIndex].position = b->position + upView - rightView;
-//        // Bottom Left
-//        mVertexBuffer[firstVertexIndex + 1].position.x = b->position.x + -upView.x-rightView.x;
-//        mVertexBuffer[firstVertexIndex + 1].position.y = b->position.y + -upView.y-rightView.y;
-//        mVertexBuffer[firstVertexIndex + 1].position.z = b->position.z +  -upView.z-rightView.z;
-        mVertexBuffer[firstVertexIndex + 1].position = b->position - upView - rightView;
+        mVertexBuffer[firstVertexIndex].position = b->position + upRotatedNorm - rightRotatedNorm;
+       // Bottom Left
+        mVertexBuffer[firstVertexIndex + 1].position = b->position - upRotatedNorm - rightRotatedNorm;
         // Top Right
-//        mVertexBuffer[firstVertexIndex + 2].position.x = b->position.x + rightView.x+upView.x;
-//        mVertexBuffer[firstVertexIndex + 2].position.y = b->position.y + rightView.y+upView.y;
-//        mVertexBuffer[firstVertexIndex + 2].position.z = b->position.z + rightView.z+upView.z;
-        mVertexBuffer[firstVertexIndex + 2].position = b->position + upView + rightView;
+        mVertexBuffer[firstVertexIndex + 2].position = b->position + upRotatedNorm + rightRotatedNorm;
         // Second Triangle
         // Top Right
-//        mVertexBuffer[firstVertexIndex + 3].position.x = b->position.x + 0.5f*b->size.x*(upView.x+rightView.x);
-//        mVertexBuffer[firstVertexIndex + 3].position.y = b->position.y + 0.5f*b->size.y*(upView.y+ rightView.y);
-//        mVertexBuffer[firstVertexIndex + 3].position.z = b->position.z;
         mVertexBuffer[firstVertexIndex + 3].position = mVertexBuffer[firstVertexIndex + 2].position;
         // Bottom Left
-//        mVertexBuffer[firstVertexIndex + 4].position.x = b->position.x + 0.5f*b->size.x*(-upView.x-rightView.x);;
-//        mVertexBuffer[firstVertexIndex + 4].position.y = b->position.y + 0.5f*b->size.y*(-upView.y-rightView.y);
-//        mVertexBuffer[firstVertexIndex + 4].position.z = b->position.z ;
         mVertexBuffer[firstVertexIndex + 4].position = mVertexBuffer[firstVertexIndex + 1].position;
         // Bottom Right
-//        mVertexBuffer[firstVertexIndex + 5].position.x = b->position.x + rightView.x -upView.x;
-//        mVertexBuffer[firstVertexIndex + 5].position.y = b->position.y + rightView.y-upView.y;
-//        mVertexBuffer[firstVertexIndex + 5].position.z = b->position.z + rightView.z-upView.z ;
-        mVertexBuffer[firstVertexIndex + 5].position = b->position - upView + rightView;
-        
+        mVertexBuffer[firstVertexIndex + 5].position = b->position - upRotatedNorm + rightRotatedNorm;
+
         // do not touch this...
         firstVertexIndex += 6;
     }
@@ -275,20 +236,100 @@ void BillboardList::Draw()
     GLuint lightAttenuationLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation");
     // Send the view projection constants to the shader
     const Camera* currentCamera = World::GetInstance()->GetCurrentCamera();
-    const vector<Light*> lights = World::GetInstance()->GetCurrentLights();
-    const Light* l = lights[0];
     mat4 V = currentCamera->GetViewMatrix();
     mat4 P = currentCamera->GetProjectionMatrix();
-//    const Light* l = currentLights[0];
+
     
-    vec4 lightPosition = l->getPosition();
-    vec3 lightColor = l->getColor();
-    vec3 lightAttenuation = l->getAttenuation();
+    
+    const vector<Light*> pointLights = World::GetInstance()->GetCurrentLights();
+    const Light* light = pointLights[0];
+    vec4 lightPosition = light->getPosition();
+    vec3 lightColor = light->getColor();
+    vec3 lightAttenuation = light->getAttenuation();
     mat4 VP = currentCamera->GetViewProjectionMatrix();
     glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
     glUniform3f(lightColorLocation,lightColor.x ,lightColor.y, lightColor.z);
     glUniform3f(lightAttenuationLocation,lightAttenuation.x ,lightAttenuation.y, lightAttenuation.z);
     glUniform4f(worldLightLocation,lightPosition.x ,lightPosition.y, lightPosition.z, lightPosition.w);
+    
+    light = pointLights[1];
+    vec4 lightPosition1 = light->getPosition();
+    vec3 lightColor1 = light->getColor();
+    vec3 lightAttenuation1 = light->getAttenuation();
+    GLuint worldLightLocation1 = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition1");
+    GLuint lightColorLocation1 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor1");
+    GLuint lightAttenuationLocation1 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation1");
+    glUniform3f(lightColorLocation1,lightColor1.x ,lightColor1.y, lightColor1.z);
+    glUniform3f(lightAttenuationLocation1,lightAttenuation1.x ,lightAttenuation1.y, lightAttenuation1.z);
+    glUniform4f(worldLightLocation1,lightPosition1.x ,lightPosition1.y, lightPosition1.z, lightPosition1.w);
+    
+    light = pointLights[2];
+    vec4 lightPosition2 = light->getPosition();
+    vec3 lightColor2 = light->getColor();
+    vec3 lightAttenuation2 = light->getAttenuation();
+    GLuint worldLightLocation2 = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition2");
+    GLuint lightColorLocation2 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor2");
+    GLuint lightAttenuationLocation2 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation2");
+    glUniform3f(lightColorLocation2,lightColor2.x ,lightColor2.y, lightColor2.z);
+    glUniform3f(lightAttenuationLocation2,lightAttenuation2.x ,lightAttenuation2.y, lightAttenuation2.z);
+    glUniform4f(worldLightLocation2,lightPosition2.x ,lightPosition2.y, lightPosition2.z, lightPosition2.w);
+    
+    light = pointLights[3];
+    vec4 lightPosition3 = light->getPosition();
+    vec3 lightColor3 = light->getColor();
+    vec3 lightAttenuation3 = light->getAttenuation();
+    GLuint worldLightLocation3 = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition3");
+    GLuint lightColorLocation3 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor3");
+    GLuint lightAttenuationLocation3 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation3");
+    glUniform3f(lightColorLocation3 ,lightColor3.x ,lightColor3.y, lightColor3.z);
+    glUniform3f(lightAttenuationLocation3, lightAttenuation3.x ,lightAttenuation3.y, lightAttenuation3.z);
+    glUniform4f(worldLightLocation3,lightPosition3.x ,lightPosition3.y, lightPosition3.z, lightPosition3.w);
+
+    light = pointLights[4];
+    vec4 lightPosition4 = light->getPosition();
+    vec3 lightColor4 = light->getColor();
+    vec3 lightAttenuation4 = light->getAttenuation();
+    GLuint worldLightLocation4 = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition4");
+    GLuint lightColorLocation4 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor4");
+    GLuint lightAttenuationLocation4 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation4");
+    glUniform3f(lightColorLocation4 ,lightColor4.x ,lightColor4.y, lightColor4.z);
+    glUniform3f(lightAttenuationLocation4, lightAttenuation4.x ,lightAttenuation4.y, lightAttenuation4.z);
+    glUniform4f(worldLightLocation4,lightPosition4.x ,lightPosition4.y, lightPosition4.z, lightPosition4.w);
+
+    
+    light = pointLights[5];
+    vec4 lightPosition5 = light->getPosition();
+    vec3 lightColor5 = light->getColor();
+    vec3 lightAttenuation5 = light->getAttenuation();
+    GLuint worldLightLocation5 = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition5");
+    GLuint lightColorLocation5 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor5");
+    GLuint lightAttenuationLocation5 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation5");
+    glUniform3f(lightColorLocation5 ,lightColor5.x ,lightColor5.y, lightColor5.z);
+    glUniform3f(lightAttenuationLocation5, lightAttenuation5.x ,lightAttenuation5.y, lightAttenuation5.z);
+    glUniform4f(worldLightLocation5,lightPosition5.x ,lightPosition5.y, lightPosition5.z, lightPosition5.w);
+    
+    light = pointLights[6];
+    vec4 lightPosition6 = light->getPosition();
+    vec3 lightColor6 = light->getColor();
+    vec3 lightAttenuation6 = light->getAttenuation();
+    GLuint worldLightLocation6 = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition6");
+    GLuint lightColorLocation6 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor6");
+    GLuint lightAttenuationLocation6 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation6");
+    glUniform3f(lightColorLocation6 ,lightColor6.x ,lightColor6.y, lightColor6.z);
+    glUniform3f(lightAttenuationLocation6, lightAttenuation6.x ,lightAttenuation6.y, lightAttenuation6.z);
+    glUniform4f(worldLightLocation6, lightPosition6.x ,lightPosition6.y, lightPosition6.z, lightPosition6.w);
+    
+    light = pointLights[7];
+    vec4 lightPosition7 = light->getPosition();
+    vec3 lightColor7 = light->getColor();
+    vec3 lightAttenuation7 = light->getAttenuation();
+    GLuint worldLightLocation7 = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition7");
+    GLuint lightColorLocation7 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor7");
+    GLuint lightAttenuationLocation7 = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation7");
+    glUniform3f(lightColorLocation7 ,lightColor7.x ,lightColor7.y, lightColor7.z);
+    glUniform3f(lightAttenuationLocation7, lightAttenuation7.x ,lightAttenuation7.y, lightAttenuation7.z);
+    glUniform4f(worldLightLocation7, lightPosition7.x ,lightPosition7.y, lightPosition7.z, lightPosition7.w);
+    
     glUniformMatrix4fv(VMatrixLocation, 1, GL_FALSE, &V[0][0]);
     glUniformMatrix4fv(PMatrixLocation, 1, GL_FALSE, &P[0][0]);
     // Draw the Vertex Buffer

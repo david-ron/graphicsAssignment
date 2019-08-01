@@ -16,9 +16,23 @@ out vec3 normal;          // Transformed normal in View Space
 out vec3 eyeVector;       // Vector from the vertex to the Camera in View Space
 out vec4 lightVector;     // Vector from the vertex to the Light in View Space
                           // Length of lightVector is the distance between light and vertex
+out vec4 lightVector1;
+out vec4 lightVector2;
+out vec4 lightVector3;
+out vec4 lightVector4;
+out vec4 lightVector5;
+out vec4 lightVector6;
+out vec4 lightVector7;
 
 // light position
 uniform vec4 WorldLightPosition; // if w = 1: Point light, if w = 0: directional light
+uniform vec4 WorldLightPosition1;
+uniform vec4 WorldLightPosition2;
+uniform vec4 WorldLightPosition3;
+uniform vec4 WorldLightPosition4;
+uniform vec4 WorldLightPosition5;
+uniform vec4 WorldLightPosition6;
+uniform vec4 WorldLightPosition7;
 
 
 out vec4 v_color;
@@ -30,17 +44,11 @@ void main()
 
     // Output position of the vertex, in clip space : MVP * position
 
-
     gl_Position =  MVP * vec4(vertexPosition_modelspace,1);
-
 
     v_color = vec4(vertexColor,1);
 
-
     float dir = WorldLightPosition.w;
-
-
-
 
     vec3 vertexPosition_cameraspace = ( MV * vec4(vertexPosition_modelspace,1)).xyz;
 
@@ -51,17 +59,80 @@ void main()
     if(WorldLightPosition.w == 1)
     {
     vec4 lightView = ViewTransform*vec4(WorldLightPosition);
-    lightVector = vec4(lightView.xyz -vertexPosition_cameraspace,dir);
+    lightVector = vec4(lightView.xyz -vertexPosition_cameraspace, dir);
     }
     else
     {
     lightVector = ViewTransform * WorldLightPosition;
     }
 
-
     normal = ( MV * vec4(vertexNormal_modelspace,0)).xyz;
 
+    if(WorldLightPosition1.w == 1)
+    {
+    vec4 lightView = ViewTransform*vec4(WorldLightPosition1);
+    lightVector1 = vec4(lightView.xyz -vertexPosition_cameraspace, dir);
+    }
+    else
+    {
+    lightVector1 = ViewTransform * WorldLightPosition1;
+    }
 
+    if(WorldLightPosition2.w == 1)
+    {
+    vec4 lightView = ViewTransform*vec4(WorldLightPosition2);
+    lightVector2 = vec4(lightView.xyz -vertexPosition_cameraspace, dir);
+    }
+    else
+    {
+    lightVector2 = ViewTransform * WorldLightPosition2;
+    }
 
+    if(WorldLightPosition3.w == 1)
+    {
+    vec4 lightView = ViewTransform*vec4(WorldLightPosition3);
+    lightVector3 = vec4(lightView.xyz -vertexPosition_cameraspace, dir);
+    }
+    else
+    {
+    lightVector3 = ViewTransform * WorldLightPosition3;
+    }
+
+    if(WorldLightPosition4.w == 1)
+    {
+    vec4 lightView = ViewTransform*vec4(WorldLightPosition4);
+    lightVector4 = vec4(lightView.xyz -vertexPosition_cameraspace, dir);
+    }
+    else
+    {
+    lightVector4 = ViewTransform * WorldLightPosition4;
+    }
+    if(WorldLightPosition5.w == 1)
+    {
+    vec4 lightView = ViewTransform*vec4(WorldLightPosition5);
+    lightVector5 = vec4(lightView.xyz -vertexPosition_cameraspace, dir);
+    }
+    else
+    {
+    lightVector5 = ViewTransform * WorldLightPosition5;
+    }
+    if(WorldLightPosition6.w == 1)
+    {
+    vec4 lightView = ViewTransform*vec4(WorldLightPosition6);
+    lightVector6 = vec4(lightView.xyz -vertexPosition_cameraspace, dir);
+    }
+    else
+    {
+    lightVector6 = ViewTransform * WorldLightPosition6;
+    }
+    if(WorldLightPosition7.w == 1)
+    {
+    vec4 lightView = ViewTransform*vec4(WorldLightPosition7);
+    lightVector7 = vec4(lightView.xyz -vertexPosition_cameraspace, dir);
+    }
+    else
+    {
+    lightVector7 = ViewTransform * WorldLightPosition7;
+    }
 }
 

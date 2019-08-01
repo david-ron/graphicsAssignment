@@ -6,12 +6,8 @@
 //  Copyright © 2019 Concordia. All rights reserved.
 //
 
-#include "Light.hpp"
-Light::Light()
-:lightPosition(0.0f,0.0f,0.0f,0.0f), lightColor(0.0f,0.0f,0.0f), lightAttenuation(0.0f,0.0f,0.0f)
-{
-}
-
+#include "Light.h"
+Light::Light():lPosition(0.0f,0.0f,0.0f,0.0f), lColor(0.0f,0.0f,0.0f), lAttenuation(0.0f,0.0f,0.0f){}
 
 bool Light::ParseLine(std::vector<ci_string> token)
 {
@@ -35,10 +31,10 @@ bool Light::ParseLine(std::vector<ci_string> token)
         assert(token.size() > 4);
         assert(token[1] == "=");
         
-        lightPosition.x = static_cast<float>(atof(token[2].c_str()));
-        lightPosition.y = static_cast<float>(atof(token[3].c_str()));
-        lightPosition.z = static_cast<float>(atof(token[4].c_str()));
-        lightPosition.w = static_cast<float>(atof(token[5].c_str()));
+        lPosition.x = static_cast<float>(atof(token[2].c_str()));
+        lPosition.y = static_cast<float>(atof(token[3].c_str()));
+        lPosition.z = static_cast<float>(atof(token[4].c_str()));
+        lPosition.w = static_cast<float>(atof(token[5].c_str()));
     
     }
     else if (token[0] == "lightattenuation")
@@ -46,18 +42,18 @@ bool Light::ParseLine(std::vector<ci_string> token)
         assert(token.size() > 4);
         assert(token[1] == "=");
         
-        lightAttenuation.x = static_cast<float>(atof(token[2].c_str()));
-        lightAttenuation.y = static_cast<float>(atof(token[3].c_str()));
-        lightAttenuation.z = static_cast<float>(atof(token[4].c_str()));
+        lAttenuation.x = static_cast<float>(atof(token[2].c_str()));
+        lAttenuation.y = static_cast<float>(atof(token[3].c_str()));
+        lAttenuation.z = static_cast<float>(atof(token[4].c_str()));
     }
     else if (token[0] == "lightcolor")
     {
         assert(token.size() > 4);
         assert(token[1] == "=");
         
-        lightColor.x = static_cast<float>(atof(token[2].c_str()));
-        lightColor.y = static_cast<float>(atof(token[3].c_str()));
-        lightColor.z = static_cast<float>(atof(token[4].c_str()));
+        lColor.x = static_cast<float>(atof(token[2].c_str()));
+        lColor.y = static_cast<float>(atof(token[3].c_str()));
+        lColor.z = static_cast<float>(atof(token[4].c_str()));
     }
     else
     {
@@ -89,20 +85,6 @@ void Light::Load(ci_istringstream& iss)
             exit(-1);
         }
     }
-}
-
-void Light::setPostion(glm::vec4 position)
-{
-    lightPosition = position;
-}
-void Light::setColor(glm::vec3 color)
-{
-    lightColor = color ;
-}
-void Light::setAttentuation(glm::vec3 attenuation)
-{
-    lightAttenuation = attenuation;
-    
 }
 Light::~Light()
 {

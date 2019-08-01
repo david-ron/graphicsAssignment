@@ -71,7 +71,7 @@ name     = "Ground"
 scaling  = 100.0 100.0 100.0
 position = 0.0 -50 0.0
 rotation = 1.0 0.0 0.0 90.0
-material = 0.2 0.8 0.5 50.0
+materialCoefficients = 0.2 0.8 0.5 50.0
 
 
 [ParticleDescriptor]
@@ -100,7 +100,7 @@ position = 0.0 1.0 0.0
 rotation = 0.0 0.0 1.0 180
 animation = "BackAndForth"
 particleEmitter = "Fountain"
-material = 0.2 0.8 0.5 50.0
+materialCoefficients = 0.2 0.8 0.5 50.0
 
 [ParticleDescriptor]
 name        = "Smoke"
@@ -126,12 +126,54 @@ name     = "Sphere"
 position = 10.0 2.0 0.0
 animation = "CycleAnim"
 particleEmitter = "Smoke"
-material = 0.2 0.8 0.5 50.0
+materialCoefficients = 0.2 0.8 0.5 50.0
 
 
 [Light]
 name = "light1"
-position = 10.0 2.0 0.0 1.0
+position = 10.0 4.0 0.0 1.0
+lightcolor = 1.0 1.0 1.0
+lightAttenuation = 0.0 0.0 0.2
+
+[Light]
+name = "light2"
+position = 7.07 2.0 7.07 1.0
+lightcolor = 1.0 1.0 1.0
+lightAttenuation = 0.0 0.1 0.2
+
+[Light]
+name = "light3"
+position = 0.0 2.0 10.0 1.0
+lightcolor = 1.0 1.0 1.0
+lightAttenuation = 0.0 0.1 0.2
+
+[Light]
+name = "light4"
+position = -7.07 2.0 7.07 1.0
+lightcolor = 1.0 1.0 1.0
+lightAttenuation = 0.0 0.1 0.2
+
+[Light]
+name = "light5"
+position = -10.0 2.0 0.0 1.0
+lightcolor = 1.0 1.0 1.0
+lightAttenuation = 0.0 0.1 0.2
+
+[Light]
+name = "light6"
+position = -7.07 2.0 -7.07 1.0
+lightcolor = 1.0 1.0 1.0
+lightAttenuation = 0.0 0.1 0.2
+
+[Light]
+name = "light7"
+position = 0.0 2.0 -10.0 1.0
+lightcolor = 1.0 1.0 1.0
+lightAttenuation = 0.0 0.1 0.2
+
+[Light]
+name = "light8"
+position = 7.07 2.0 -7.07 1.0
 lightcolor = 1.0 1.0 1.0
 lightAttenuation = 0.0 0.1 0.2
 

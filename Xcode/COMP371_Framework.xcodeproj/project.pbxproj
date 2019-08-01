@@ -97,7 +97,7 @@
 		03FE4ED21B2FA1010020F06F /* Scenes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Scenes; path = ../Assets/Scenes; sourceTree = "<group>"; };
 		03FE4ED31B2FA1010020F06F /* Shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Shaders; path = ../Assets/Shaders; sourceTree = "<group>"; };
 		63FD9E6522EE4987006FAD6A /* Light.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Light.cpp; sourceTree = "<group>"; };
-		63FD9E6622EE4987006FAD6A /* Light.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Light.hpp; sourceTree = "<group>"; };
+		63FD9E6622EE4987006FAD6A /* Light.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Light.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,7 +197,7 @@
 				0321757222D7005A00DF6CEA /* World.cpp */,
 				0321758D22D7005B00DF6CEA /* World.h */,
 				63FD9E6522EE4987006FAD6A /* Light.cpp */,
-				63FD9E6622EE4987006FAD6A /* Light.hpp */,
+				63FD9E6622EE4987006FAD6A /* Light.h */,
 			);
 			name = Source;
 			path = ../Source;

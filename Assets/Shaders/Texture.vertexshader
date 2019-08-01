@@ -43,9 +43,6 @@ void main()
 
     float dir = WorldLightPosition.w;
 
-
-
-
     vec3 vertexPosition_cameraspace = ( MV * vec4(vertexPosition_modelspace,1)).xyz;
 
     vec3 Position_worldspace = (WorldTransform * vec4(vertexPosition_modelspace, 1)).xyz;
@@ -59,7 +56,8 @@ void main()
     }
     else
     {
-    lightVector = ViewTransform * WorldLightPosition;
+        lightVector = ViewTransform * WorldLightPosition;
+        lightVector[3] = 0;
     }
 
 
