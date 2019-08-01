@@ -1340,7 +1340,10 @@ void SphereModel::Draw()
     glBindVertexArray(mVAO);
     glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
-    GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform"); 
+    GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
+    GLuint materialCoefLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
+    
+    glUniform4f(materialCoefLocation,mMaterial.x ,mMaterial.y, mMaterial.z, mMaterial.w);
     glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
     
     // Draw the triangles !

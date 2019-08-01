@@ -33,12 +33,14 @@ public:
 	void SetPosition(glm::vec3 position);
 	void SetScaling(glm::vec3 scaling);
 	void SetRotation(glm::vec3 axis, float angleDegrees);
-
+    void SetMaterial(glm::vec4 material);
+    
 	glm::vec3 GetPosition() const		{ return mPosition; }
 	glm::vec3 GetScaling() const		{ return mScaling; }
 	glm::vec3 GetRotationAxis() const	{ return mRotationAxis; }
 	float     GetRotationAngle() const	{ return mRotationAngleInDegrees; }
     ci_string GetName()                 { return mName; }
+    glm::vec4 getMaterial() const       { return mMaterial; }
 
 protected:
 	virtual bool ParseLine(const std::vector<ci_string> &token) = 0;
@@ -47,6 +49,8 @@ protected:
 	glm::vec3 mPosition;
 	glm::vec3 mScaling;
 	glm::vec3 mRotationAxis;
+    glm::vec4 mMaterial;
+    
 	float     mRotationAngleInDegrees;
 
     // Makes the model follow a list of Animation Keys so it's world transform changes over time

@@ -20,6 +20,7 @@ class Animation;
 class AnimationKey;
 class ParticleSystem;
 class ParticleDescriptor;
+class Light;
 
 class World
 {
@@ -38,6 +39,7 @@ public:
     ParticleDescriptor* FindParticleDescriptor(ci_string name);
 
     const Camera* GetCurrentCamera() const;
+    const std::vector<Light*> GetCurrentLights() const {return mLight;}
     void AddBillboard(Billboard* b);
     void RemoveBillboard(Billboard* b);
     void AddParticleSystem(ParticleSystem* particleSystem);
@@ -54,6 +56,7 @@ private:
 	std::vector<Camera*> mCamera;
     std::vector<ParticleSystem*> mParticleSystemList;
     std::vector<ParticleDescriptor*> mParticleDescriptorList;
+    std::vector<Light*> mLight;
 	unsigned int mCurrentCamera;
 
     BillboardList* mpBillboardList;

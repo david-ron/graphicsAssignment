@@ -92,15 +92,13 @@ void ParticleSystem::Update(float dt)
         // Step 2 : You can rotate the result in step 1 by an random angle from 0 to
         //          360 degrees about the original velocity vector
     
-        
-        
-        float randomValue = EventManager::GetRandomFloat(0.0f, mpDescriptor->velocityAngleRandomness);
-        vec3 axisToRotateOn = cross(mpDescriptor->velocity,vec3(1.0f, 0.0f, 0.0f));
-        vec3 randomAngleVelocity=glm::rotate(mpDescriptor->velocity, radians(randomValue), axisToRotateOn);
-        float randomValue2 = EventManager::GetRandomFloat(0.0f, 360.0f);
-//        vec3 axisToRotateOn2 = cross(mpDescriptor->velocity, randomAngleVelocity);
-        newParticle->velocity=glm::rotate(mpDescriptor->velocity, radians(randomValue2), randomAngleVelocity);
-        // ...
+        vec3 rotateAxis = vec3(0.0f,0.0f,1.0f);
+        vec3 axisToRotateOn = cross(mpDescriptor->velocity,vec3(0.0f, 0.0f, 1.0f));
+        float valVelocityRandomness = EventManager::GetRandomFloat(0.0f, mpDescriptor->velocityAngleRandomness);
+        vec3 velocityVector=glm::rotate(mpDescriptor->velocity, radians(valVelocityRandomness), rotateAxis);
+        float val360 = EventManager::GetRandomFloat(0.0f, 360.0f);
+        newParticle->velocity=glm::rotate(mpDescriptor->velocity, radians(val360), velocityVector);
+
     }
     
     
@@ -109,7 +107,8 @@ void ParticleSystem::Update(float dt)
         Particle* p = *it;
 		p->currentTime += dt;
         p->billboard.position += p->velocity * dt;
-        
+        p->velocity += mpDescriptor->acceleration*dt;
+
         // @TODO 6 - Update each particle parameters
         //
         // Update the velocity of the particle from the acceleration in the descriptor
@@ -122,24 +121,26 @@ void ParticleSystem::Update(float dt)
         // Phase 3 - End:     from t = [lifeTime - fadeOutTime, lifeTime]
         //float dt = (mCurrentTime - mKeyTime[indexes[0]]) / (mKeyTime[indexes[1]] - mKeyTime[indexes[0]]);
         
+
+        vec4 initialColor = mpDescriptor->initialColor;
+        vec4 midColor = mpDescriptor->midColor;
+        vec4 endColor = mpDescriptor->endColor;
+        vec4 color;
         float fadeInTime = mpDescriptor->fadeInTime;
         float fadeOutTime = mpDescriptor->fadeOutTime;
         float currentTime = p->currentTime;
-        float lifeTime = mpDescriptor->totalLifetime ;
-        vec4 color;
-        p->velocity += mpDescriptor->acceleration*dt;
+        float lifeTime = mpDescriptor->totalLifetime;
+        float deltaTime = 0;
         if (currentTime>= 0 && currentTime<=fadeInTime){
-            vec4 initialColor = mpDescriptor->initialColor;
-            vec4 midColor = mpDescriptor->midColor;
-            color = mix(initialColor,  midColor, (currentTime - 0) / (fadeInTime - 0));
+            deltaTime = (currentTime - 0) / (fadeInTime - 0);
+            color = mix(initialColor,  midColor, deltaTime);
         }
         else if(currentTime>=fadeInTime && currentTime<=lifeTime-fadeOutTime){
             color = mpDescriptor->midColor;
         }
         else if(currentTime>=lifeTime-fadeOutTime&&currentTime<=lifeTime){
-            vec4 midColor = mpDescriptor->midColor;
-            vec4 endColor = mpDescriptor->endColor;
-            color = mix(midColor,  endColor, (currentTime - lifeTime) / (lifeTime-fadeOutTime - lifeTime));
+            deltaTime = (currentTime-(lifeTime-fadeOutTime))/(fadeOutTime);
+            color = mix(midColor, endColor, deltaTime);
         }
         p->billboard.size += dt * mpDescriptor->sizeGrowthVelocity;
         // ...
